@@ -72,23 +72,20 @@
     小米路由器后台管理页面基本一致：
     常用设置->局域网设置->DHCP服务，修改DNS和网关ip为透明代理网关ip，二者需要在一个网段
 
-    ipv6设置：
+### ipv6设置：
+
     如果没有ipv6的需求，可以免除这一步，如果想看ipv6的iptv，就可以参考以下。
     由于ipv6的ip都是公网ip，且子网网段的分配都受限于运营商，一般情况下，家庭宽带无法使用静态ipv6配置，这就意味着我们没法手动设置网关。
     如果上网方式设置了Native模式，那么网关一定是路由器本身，这就会导致翻墙时，支持ipv6的网站没有经过透明代理网关，无法正常上网。
     由于我们的clash中使用了fake-ip的dns服务，所以我们只要把ipv6的dns服务地址设置成透明代理网关的ip即可，这样我们设备获得的ip6就是fake-ip提供的，上网一定会经过透明代理网关。
-
     设置ipv6的dns服务器存在一个问题，即家庭宽带ipv6局域网前缀是会经常变动的，导致透明代理网关的ipv6地址也是变化的，所以我们没法填写一个固定的ipv6地址作为ipv6的dns服务器地址。此时我们可以利用6to4解决这个问题。
-
     下面介绍小米路由器如何设置
-    
     1. 首先将透明代理ip转换为ipv6地址，例如：192.168.31.2 - > ::ffff:C0A8:1F02，具体规则可以自行百度
     2. 上网方式选择Native，防火墙保持开启
     3. DNS选择手动配置DNS，输入::ffff:C0A8:1F02,此时提示`IPv6地址由8组四个十六进制数组成，每组之间用:区隔`
-    4. 由于路由器页面对地址格式做了不必要的校验，我们可以按F12，选择network窗口，随便填一个正确的dns地址，例如2402:4e00::,点击应用，找到set_wan6这个请求：
-    右键复制为powershell
-    
-    ```
+    4. 由于路由器页面对地址格式做了不必要的校验，我们可以按F12，选择network窗口，随便填一个正确的dns地址，例如2402:4e00::,点击应用，找到set_wan6这个请求：右键复制为powershell
+
+```
     $session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
     $session.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
     $session.Cookies.Add((New-Object System.Net.Cookie("__guid", "...3228", "/", "192.168.31.1")))
@@ -107,7 +104,7 @@
     } `
     -ContentType "application/x-www-form-urlencoded; charset=UTF-8" `
     -Body "wanType=native&autosetipv6=1&dns1=2402%3A4e00%3A%3A1&dns2="
-    ```
+```
     
     将上面的dns1=2402%3A4e00%3A%3A1&dns2=替换为dns1=%3A%3Affff%3AC0A8%3A1F02&dns2=
 
