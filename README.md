@@ -17,7 +17,7 @@
 ### 下载本项目
 
 ```
-git clone git@github.com:svengong/transproxy.git && chmod +x *
+git clone https://github.com/svengong/transproxy.git && cd transproxy && chmod +x * && chmod +x *
 ```
 
 ### 下载clash
