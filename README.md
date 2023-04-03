@@ -9,14 +9,21 @@
 
     依赖一定要先安装
 
-    ```
+```
     sudo apt install ipset 
     pip3 install pyyaml requests argparse
-    ```
+```
+
+### 下载本项目
+
+```
+git clone git@github.com:svengong/transproxy.git && chmod +x *
+```
 
 ### 下载clash
+
     使用下面的chatgpt帮忙写的脚本下载，或者手动下载后赋予执行权限
-    ```
+```
     #!/bin/bash
 
     # Get the latest release tag
@@ -33,25 +40,28 @@
     binary_file="clash-linux-amd64"
     chmod +x "$binary_file"
 
-    ```
+``` 
 
 ### 准备clash配置文件
 
     生成配置文件
-    ```
+```
     python3 .\update.py --sub https://your.sub.addr
-    ```
+```
     如果有两个订阅地址，第二个作为备份：
-    ```
+```
     python3 .\update.py --sub https://your.subscribe.addr --bak https://your.backup.scribe.addr
-    ```
+```
     生成的配置文件为config.yaml,如何想自定义，可以先修改config_tpl.yaml再重新生成
     
 
 ### 一键配置
-    ```
-    ./install.sh
-    ```
+    如果已经是root权限，则不需要使用sudo了：
+```
+    sudo ./install.sh
+```
+    
+
     该脚本执行以下内容：
     1. 关闭原有dns服务
     2. 配置iptables

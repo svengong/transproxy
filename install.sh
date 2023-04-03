@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Stop systemd-resolved service
-sudo systemctl stop systemd-resolved.service
+systemctl stop systemd-resolved.service
 
 # Edit resolved.conf file to set DNSStubListener to no
-sudo sed -i 's/#DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
+sed -i 's/#DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
 
 # Create a symbolic link to point /etc/resolv.conf to /run/systemd/resolve/resolv.conf
-sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 
 #!/bin/bash
@@ -31,24 +31,29 @@ ExecStart=$(pwd)/clash-linux-amd64 -d $(pwd)
 WantedBy=multi-user.target"
 
 # Create the service file with the defined content
-echo "$SERVICE" | sudo tee /etc/systemd/system/clash.service > /dev/null
+echo "$SERVICE" | tee /etc/systemd/system/clash.service > /dev/null
 
 # Reload the systemd daemon to read the new service
-sudo systemctl daemon-reload
+systemctl daemon-reload
+
+sleep 0.5
 
 # Enable the service to start on boot
-sudo systemctl enable clash.service
+systemctl enable clash.service
+
+sleep 0.5
 
 # Start the service
-sudo systemctl restart clash.service
+systemctl restart clash.service
 
+sleep 0.5
 
 for i in {1..3}; do
-    sudo ./clean_iptables_v4_v6.sh
+    ./clean_iptables_v4_v6.sh
     if [ $? -eq 0 ]; then
         break
     fi
     sleep 0.5
 done
 
-sudo ./iptables_v4_v6.sh
+./iptables_v4_v6.sh
